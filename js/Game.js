@@ -44,7 +44,9 @@ class Game {
     form.hide();
 
     Player.getPlayerInfo();
-    
+    player.getFinishedPlayers();
+
+
     if(allPlayers !== undefined){
       //var display_position = 100;
       background(ground)
@@ -82,20 +84,48 @@ class Game {
 
     }
 
-    if(keyIsDown(UP_ARROW) && player.index !== null){
+    if(keyIsDown(UP_ARROW) && player.index !== null && passedFinish === false){
       player.distance +=10
       player.update();
     }
 
-    if(player.distance > 3860){
-      gameState = 2
+    if(player.distance > 400 && passedFinish === false ){
+      Player.updateFinishedPlayers();
+      player.rank= finishedPlayers;
+      player.update();
+      passedFinish= true;
+
     }
 
     drawSprites();
   }
-  end(){
-    console.log("GAME OVER")
 
+  displayRanks(){
+    camera.position.x = 0;
+    camera.position.y = 0;
+    
+    imageMode(CENTER);
+    Player.getPlayerInfo();
 
+    image(third, displayWidth/-4, -100 + displayHeight/9, 200, 240);
+    image(second, displayWidth/4, -100 + displayHeight/10, 225, 270);
+    image(first, 0, -100, 250, 300);
+
+    textAlign(CENTER);
+    textSize(50);
+    
+    for(var plr in allPlayers){
+      if(allPlayers[plr].rank === 1){
+        text("1st :  "+allPlayers[plr].name,0,85);
+      }
+      else if(allPlayers[plr].rank === 2){
+        text("2nd: " + allPlayers[plr].name, displayWidth/4, displayHeight/9 + 73);
+      }else if(allPlayers[plr].rank === 3){
+        text("3rd: " + allPlayers[plr].name, displayWidth/-4, displayHeight/10 + 76);
+      }else{
+        textSize(30);
+        text("Honorable Mention: " + allPlayers[plr].name, 0, 225);
+      }
+    }
   }
 }
